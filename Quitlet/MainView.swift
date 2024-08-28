@@ -6,27 +6,16 @@
 //
 
 import SwiftUI
-import SwiftUI
-
-struct FlashCardModule: Identifiable {
-    let id = UUID()
-    let name: String
-    var flashCards: [FlashCard]
-}
-
-
-
-import SwiftUI
-
-import SwiftUI
-
-import SwiftUI
 
 struct MainView: View {
     @State private var modules: [FlashCardModule] = [
         FlashCardModule(name: "Fruits", flashCards: [
             FlashCard(question: "Apple", answer: "Яблоко"),
-            FlashCard(question: "Banana", answer: "Банан")
+            FlashCard(question: "Banana", answer: "Банан"),
+            FlashCard(question: "Fruit", answer: "Банан"),
+            FlashCard(question: "Red", answer: "Банан"),
+            FlashCard(question: "Blue", answer: "Банан"),
+            FlashCard(question: "White", answer: "Банан"),
         ]),
         FlashCardModule(name: "Colors", flashCards: [
             FlashCard(question: "Red", answer: "Красный"),
@@ -39,15 +28,16 @@ struct MainView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                LazyVStack(spacing: 16) {
                     ForEach($modules) { $module in
                         NavigationLink(destination: FlashCardsView(module: $module)) {
                             ModuleView(module: module)
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .buttonStyle(PlainButtonStyle()) // Убирает эффект выделения нажатия
                     }
                 }
                 .padding()
+                .frame(maxWidth: .infinity) // Занимает всю доступную ширину
             }
             .navigationTitle("Modules")
             .navigationBarItems(trailing: Button(action: {
@@ -61,6 +51,9 @@ struct MainView: View {
         }
     }
 }
+
+
+
 
 
 #Preview {

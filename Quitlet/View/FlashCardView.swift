@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
+
 struct FlashCardView: View {
     let card: FlashCard
     @Binding var showTranslation: Bool
@@ -52,6 +52,7 @@ struct FlashCardView: View {
                         let isCorrect = offset.width > 0
                         onSwipe(isCorrect)
                     } else {
+                        // Возвращаем карточку в исходное положение при небольшом свайпе
                         withAnimation {
                             offset = .zero
                         }

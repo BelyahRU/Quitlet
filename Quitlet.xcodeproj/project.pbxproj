@@ -17,6 +17,7 @@
 		1AAC73382C7FD19200CF316B /* AddModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAC73372C7FD19200CF316B /* AddModuleView.swift */; };
 		1AAC733A2C7FD24700CF316B /* FlashCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAC73392C7FD24700CF316B /* FlashCardView.swift */; };
 		1AAC733C2C7FD2DF00CF316B /* ModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAC733B2C7FD2DF00CF316B /* ModuleView.swift */; };
+		1AAC733E2C7FE32600CF316B /* ModuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAC733D2C7FE32600CF316B /* ModuleRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		1AAC73372C7FD19200CF316B /* AddModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddModuleView.swift; sourceTree = "<group>"; };
 		1AAC73392C7FD24700CF316B /* FlashCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashCardView.swift; sourceTree = "<group>"; };
 		1AAC733B2C7FD2DF00CF316B /* ModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleView.swift; sourceTree = "<group>"; };
+		1AAC733D2C7FE32600CF316B /* ModuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 		1AAC73202C7CE7AA00CF316B /* Quitlet */ = {
 			isa = PBXGroup;
 			children = (
+				1AAC733D2C7FE32600CF316B /* ModuleRow.swift */,
 				1AAC733B2C7FD2DF00CF316B /* ModuleView.swift */,
 				1AAC73322C7CEA5C00CF316B /* View */,
 				1AAC732F2C7CEA0700CF316B /* Model */,
@@ -173,6 +176,7 @@
 			files = (
 				1AAC73312C7CEA1600CF316B /* FlashCard.swift in Sources */,
 				1AAC73342C7CEA7300CF316B /* FlashCardsView.swift in Sources */,
+				1AAC733E2C7FE32600CF316B /* ModuleRow.swift in Sources */,
 				1AAC733C2C7FD2DF00CF316B /* ModuleView.swift in Sources */,
 				1AAC733A2C7FD24700CF316B /* FlashCardView.swift in Sources */,
 				1AAC73242C7CE7AA00CF316B /* MainView.swift in Sources */,

@@ -16,12 +16,19 @@ struct FlashCardsView: View {
     @State private var offset: CGSize = .zero
     @State private var flashColor: Color = .white
     @State private var hideText = false
-    @State private var showingAddCardView = false
+    
+    @State private var localFlashCards: [FlashCard]
+    @State private var liveCompletionPercentage: Double = 0.0
+
+    init(module: Binding<FlashCardModule>) {
+        _module = module
+        _localFlashCards = State(initialValue: module.wrappedValue.flashCards)
+    }
 
     var body: some View {
         VStack {
-            if !module.flashCards.isEmpty {
-                FlashCardView(card: module.flashCards[currentIndex], showTranslation: $showTranslation, offset: $offset, flashColor: $flashColor, hideText: $hideText) { isCorrect in
+            if !localFlashCards.isEmpty {
+                FlashCardView(card: localFlashCards[currentIndex], showTranslation: $showTranslation, offset: $offset, flashColor: $flashColor, hideText: $hideText) { isCorrect in
                     handleSwipe(isCorrect: isCorrect)
                 }
                 .onTapGesture {
@@ -33,18 +40,17 @@ struct FlashCardsView: View {
         }
         .padding()
         .navigationTitle(module.name)
-        .navigationBarItems(trailing: Button(action: {
-            showingAddCardView = true
-        }) {
-            Image(systemName: "plus")
-        })
-        .sheet(isPresented: $showingAddCardView) {
-            AddCardView(module: $module)
+        .navigationBarItems(trailing: Text("Progress: \(Int(liveCompletionPercentage))%").font(.headline))
+        .onAppear {
+            module.resetViewedCards()
+            localFlashCards = module.flashCards
+            currentIndex = 0
+            updateLiveCompletionPercentage()
         }
     }
 
     func handleSwipe(isCorrect: Bool) {
-        guard !module.flashCards.isEmpty else { return }
+        guard !localFlashCards.isEmpty else { return }
 
         withAnimation {
             flashColor = isCorrect ? .green : .red
@@ -52,25 +58,32 @@ struct FlashCardsView: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            let card = localFlashCards[currentIndex]
             if isCorrect {
-                module.flashCards.remove(at: currentIndex)
-            } else {
-                module.flashCards.remove(at: currentIndex)
+                module.markCardAsViewed(card)
             }
 
-            if module.flashCards.isEmpty {
+            localFlashCards.remove(at: currentIndex)
+            if localFlashCards.isEmpty {
                 currentIndex = 0
-            } else if currentIndex >= module.flashCards.count {
+                module.updateBestCompletionPercentage()
+            } else if currentIndex >= localFlashCards.count {
                 currentIndex = 0
             }
+
+            updateLiveCompletionPercentage()
 
             withAnimation {
                 offset = .zero
                 flashColor = .white
                 hideText = false
             }
-            
+
             showTranslation = false
         }
+    }
+    
+    private func updateLiveCompletionPercentage() {
+        liveCompletionPercentage = module.completionPercentage
     }
 }
