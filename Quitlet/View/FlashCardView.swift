@@ -16,23 +16,31 @@ struct FlashCardView: View {
     @Binding var hideText: Bool
     var onSwipe: (Bool) -> Void
 
+    @State private var isFlipped: Bool = false
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(flashColor)
+                .fill(isFlipped ? Color.gray : flashColor)
                 .shadow(radius: 5)
-                .animation(.easeInOut(duration: 0.3), value: flashColor)
+                .rotation3DEffect(
+                    .degrees(isFlipped ? 180 : 0),
+                    axis: (x: 0, y: 1, z: 0)
+                )
+                .animation(.easeInOut(duration: 0.6), value: isFlipped)
 
             VStack {
                 if !hideText {
-                    if showTranslation {
+                    if isFlipped {
                         Text(card.answer)
                             .font(.largeTitle)
-                            .foregroundColor(.black)
+                            .foregroundColor(.white) // Белый цвет текста для перевернутой карточки
+                            .transition(.opacity) // Плавное появление текста
                     } else {
                         Text(card.question)
                             .font(.largeTitle)
-                            .foregroundColor(.black)
+                            .foregroundColor(.black) // Черный цвет текста для лицевой стороны карточки
+                            .transition(.opacity) // Плавное появление текста
                     }
                 }
             }
@@ -59,6 +67,13 @@ struct FlashCardView: View {
                     }
                 }
         )
+        .onTapGesture {
+            // Переключение переворота карточки
+            withAnimation {
+                isFlipped.toggle()
+            }
+        }
         .animation(.spring(), value: offset)
     }
 }
+

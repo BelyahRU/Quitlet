@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
 
 struct FlashCardsView: View {
     @Binding var module: FlashCardModule
@@ -48,7 +47,7 @@ struct FlashCardsView: View {
                     Text("Progress: \(Int(liveCompletionPercentage))%")
                         .font(.headline)
                         .padding()
-                    ProgressView(value: liveCompletionPercentage, total: 100)
+                    ProgressView(value: Double(module.totalCardCount - localFlashCards.count), total: Double(module.totalCardCount))
                         .progressViewStyle(LinearProgressViewStyle())
                         .frame(height: 10)
                         .padding(.horizontal)
@@ -111,7 +110,7 @@ struct FlashCardsView: View {
     }
     
     private func updateLiveCompletionPercentage() {
-        // Обновляем процент выполнения
+        // Обновляем процент правильного выполнения
         liveCompletionPercentage = module.completionPercentage
     }
 
@@ -121,11 +120,6 @@ struct FlashCardsView: View {
         module.resetViewedCards()
         currentIndex = 0
         updateLiveCompletionPercentage()
-        showingCompletionView = false
-    }
-    
-    private func closeCompletionView() {
-        // Закрываем CompletionView и возвращаемся к главному экрану
         showingCompletionView = false
     }
 }

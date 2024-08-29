@@ -12,23 +12,41 @@ struct ModuleView: View {
     let module: FlashCardModule
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(module.name)
-                .font(.headline)
-                .foregroundColor(.primary)
-            Text("\(module.totalCardCount) cards - Best Progress: \(Int(module.bestCompletionPercentage))%")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+        ZStack {
+            // Фон
+            if module.bestCompletionPercentage == 100 {
+                Color.green
+                    .edgesIgnoringSafeArea(.all)
+            } else {
+                LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .edgesIgnoringSafeArea(.all)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(module.name)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 4)
+
+                Text("\(module.flashCards.count) cards")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+
+                HStack {
+                    Text("Best: \(Int(module.bestCompletionPercentage))%")
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                        .padding(.trailing, 8)
+                }
+                
+            }
+            .padding()
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .shadow(radius: 3)
-        .frame(maxWidth: .infinity) // Занимает всю доступную ширину
+        .cornerRadius(15)
+        .shadow(radius: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.white, lineWidth: 2)
+        )
     }
 }
-
-
-
-
-
