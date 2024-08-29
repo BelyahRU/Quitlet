@@ -19,6 +19,8 @@ struct FlashCardsView: View {
     
     @State private var localFlashCards: [FlashCard]
     @State private var liveCompletionPercentage: Double = 0.0
+    @State private var showingAddCardView = false
+    @State private var showingCompletionView = false
 
     init(module: Binding<FlashCardModule>) {
         _module = module
@@ -27,20 +29,44 @@ struct FlashCardsView: View {
 
     var body: some View {
         VStack {
-            if !localFlashCards.isEmpty {
-                FlashCardView(card: localFlashCards[currentIndex], showTranslation: $showTranslation, offset: $offset, flashColor: $flashColor, hideText: $hideText) { isCorrect in
-                    handleSwipe(isCorrect: isCorrect)
-                }
-                .onTapGesture {
-                    showTranslation.toggle()
-                }
+            if showingCompletionView {
+                CompletionView(completionPercentage: liveCompletionPercentage, onReplay: replayModule)
+                    .transition(.opacity)
             } else {
-                Text("No cards available")
+                if !localFlashCards.isEmpty {
+                    FlashCardView(card: localFlashCards[currentIndex], showTranslation: $showTranslation, offset: $offset, flashColor: $flashColor, hideText: $hideText) { isCorrect in
+                        handleSwipe(isCorrect: isCorrect)
+                    }
+                    .onTapGesture {
+                        showTranslation.toggle()
+                    }
+                } else {
+                    Text("No cards available")
+                }
+                Spacer()
+                VStack {
+                    Text("Progress: \(Int(liveCompletionPercentage))%")
+                        .font(.headline)
+                        .padding()
+                    ProgressView(value: liveCompletionPercentage, total: 100)
+                        .progressViewStyle(LinearProgressViewStyle())
+                        .frame(height: 10)
+                        .padding(.horizontal)
+                }
             }
         }
         .padding()
         .navigationTitle(module.name)
-        .navigationBarItems(trailing: Text("Progress: \(Int(liveCompletionPercentage))%").font(.headline))
+        .navigationBarItems(trailing: HStack {
+            Button(action: {
+                showingAddCardView = true
+            }) {
+                Image(systemName: "plus")
+            }
+            .sheet(isPresented: $showingAddCardView) {
+                AddCardView(module: $module)
+            }
+        })
         .onAppear {
             module.resetViewedCards()
             localFlashCards = module.flashCards
@@ -67,6 +93,7 @@ struct FlashCardsView: View {
             if localFlashCards.isEmpty {
                 currentIndex = 0
                 module.updateBestCompletionPercentage()
+                showingCompletionView = true // Показать CompletionView
             } else if currentIndex >= localFlashCards.count {
                 currentIndex = 0
             }
@@ -84,6 +111,21 @@ struct FlashCardsView: View {
     }
     
     private func updateLiveCompletionPercentage() {
+        // Обновляем процент выполнения
         liveCompletionPercentage = module.completionPercentage
+    }
+
+    private func replayModule() {
+        // Перезапускаем модуль
+        localFlashCards = module.flashCards
+        module.resetViewedCards()
+        currentIndex = 0
+        updateLiveCompletionPercentage()
+        showingCompletionView = false
+    }
+    
+    private func closeCompletionView() {
+        // Закрываем CompletionView и возвращаемся к главному экрану
+        showingCompletionView = false
     }
 }

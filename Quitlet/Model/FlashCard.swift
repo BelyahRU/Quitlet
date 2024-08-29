@@ -9,39 +9,44 @@ import Foundation
 
 import Foundation
 
-struct FlashCard: Identifiable {
+struct FlashCard: Identifiable, Hashable {
     let id = UUID()
     var question: String
     var answer: String
 }
-import SwiftUI
+
+import Foundation
 
 struct FlashCardModule: Identifiable {
-    let id = UUID()
+    let id = UUID() // Уникальный идентификатор
     var name: String
     var flashCards: [FlashCard]
-    private(set) var viewedCardIDs: Set<UUID> = []
-    var bestCompletionPercentage: Double = 0.0
+    
+    private(set) var viewedCards: Set<FlashCard> = []
+    private(set) var bestCompletionPercentage: Double = 0.0
 
+    // Вычисляемое свойство для получения общего количества карточек
     var totalCardCount: Int {
         return flashCards.count
     }
 
-    var correctAnswerCount: Int {
-        return viewedCardIDs.count
-    }
-
-    var completionPercentage: Double {
-        guard totalCardCount > 0 else { return 0.0 }
-        return (Double(correctAnswerCount) / Double(totalCardCount)) * 100
+    // Вычисляемое свойство для получения количества просмотренных карточек
+    var viewedCardCount: Int {
+        return viewedCards.count
     }
 
     mutating func markCardAsViewed(_ card: FlashCard) {
-        viewedCardIDs.insert(card.id)
+        viewedCards.insert(card)
     }
 
     mutating func resetViewedCards() {
-        viewedCardIDs.removeAll()
+        viewedCards.removeAll()
+    }
+
+    var completionPercentage: Double {
+        let totalCount = totalCardCount
+        let correctCount = viewedCardCount
+        return totalCount > 0 ? (Double(correctCount) / Double(totalCount)) * 100 : 0
     }
 
     mutating func updateBestCompletionPercentage() {

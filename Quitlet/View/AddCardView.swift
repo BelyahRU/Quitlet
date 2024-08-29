@@ -11,32 +11,30 @@ import SwiftUI
 
 struct AddCardView: View {
     @Binding var module: FlashCardModule
-    @Environment(\.presentationMode) var presentationMode
-    
-    @State private var word: String = ""
-    @State private var translation: String = ""
-    
+    @State private var question: String = ""
+    @State private var answer: String = ""
+
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("New Card")) {
-                    TextField("Word", text: $word)
-                    TextField("Translation", text: $translation)
+                Section(header: Text("Add New Card")) {
+                    TextField("Question", text: $question)
+                    TextField("Answer", text: $answer)
                 }
-                
-                Button(action: addCard) {
-                    Text("Add Card")
+                Button("Save") {
+                    if !question.isEmpty && !answer.isEmpty {
+                        let newCard = FlashCard(question: question, answer: answer)
+                        module.flashCards.append(newCard)
+                        question = ""
+                        answer = ""
+                    }
                 }
-                .disabled(word.isEmpty || translation.isEmpty)
             }
-            .navigationBarTitle("Add Card", displayMode: .inline)
+            .navigationTitle("Add Card")
+            .navigationBarItems(trailing: Button("Done") {
+                // This will close the sheet
+            })
         }
-    }
-    
-    func addCard() {
-        let newCard = FlashCard(question: word, answer: translation)
-        module.flashCards.append(newCard)
-        presentationMode.wrappedValue.dismiss() // Закрываем модальное окно после добавления карточки
     }
 }
 
