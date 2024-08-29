@@ -7,10 +7,11 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
 
 struct AddCardView: View {
     @Binding var module: FlashCardModule
+    @Environment(\.presentationMode) var presentationMode
+    
     @State private var question: String = ""
     @State private var answer: String = ""
 
@@ -27,15 +28,18 @@ struct AddCardView: View {
                         module.flashCards.append(newCard)
                         question = ""
                         answer = ""
+                        presentationMode.wrappedValue.dismiss()  // Close the view after saving
                     }
                 }
+                .disabled(question.isEmpty || answer.isEmpty)  // Disable button if fields are empty
             }
             .navigationTitle("Add Card")
-            .navigationBarItems(trailing: Button("Done") {
-                // This will close the sheet
+            .navigationBarItems(trailing: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()  // Close the view
             })
         }
     }
 }
+
 
 

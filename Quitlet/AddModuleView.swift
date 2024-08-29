@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftUI
 
 struct AddModuleView: View {
     @Binding var modules: [FlashCardModule]
@@ -34,8 +35,7 @@ struct AddModuleView: View {
                 .disabled(moduleName.isEmpty || word.isEmpty || translation.isEmpty)
             }
             .navigationBarTitle("Add Module")
-            .navigationBarItems(trailing: Button("Done") {
-                addModule()
+            .navigationBarItems(trailing: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             })
         }
@@ -45,5 +45,6 @@ struct AddModuleView: View {
         let newCard = FlashCard(question: word, answer: translation)
         let newModule = FlashCardModule(name: moduleName, flashCards: [newCard])
         modules.append(newModule)
+        presentationMode.wrappedValue.dismiss() // Закрываем экран и возвращаемся на главный экран
     }
 }

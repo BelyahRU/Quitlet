@@ -15,11 +15,11 @@ struct FlashCardsView: View {
     @State private var offset: CGSize = .zero
     @State private var flashColor: Color = .white
     @State private var hideText = false
-    
     @State private var localFlashCards: [FlashCard]
     @State private var liveCompletionPercentage: Double = 0.0
     @State private var showingAddCardView = false
     @State private var showingCompletionView = false
+    @State private var showingEditModuleView = false
 
     init(module: Binding<FlashCardModule>) {
         _module = module
@@ -47,7 +47,7 @@ struct FlashCardsView: View {
                     Text("Progress: \(Int(liveCompletionPercentage))%")
                         .font(.headline)
                         .padding()
-                    ProgressView(value: Double(module.totalCardCount - localFlashCards.count), total: Double(module.totalCardCount))
+                    ProgressView(value: Double(module.flashCards.count - localFlashCards.count), total: Double(module.flashCards.count))
                         .progressViewStyle(LinearProgressViewStyle())
                         .frame(height: 10)
                         .padding(.horizontal)
@@ -64,6 +64,15 @@ struct FlashCardsView: View {
             }
             .sheet(isPresented: $showingAddCardView) {
                 AddCardView(module: $module)
+            }
+            
+            Button(action: {
+                showingEditModuleView = true
+            }) {
+                Image(systemName: "pencil")
+            }
+            .sheet(isPresented: $showingEditModuleView) {
+                EditModuleView(module: $module)
             }
         })
         .onAppear {
@@ -110,12 +119,10 @@ struct FlashCardsView: View {
     }
     
     private func updateLiveCompletionPercentage() {
-        // Обновляем процент правильного выполнения
         liveCompletionPercentage = module.completionPercentage
     }
 
     private func replayModule() {
-        // Перезапускаем модуль
         localFlashCards = module.flashCards
         module.resetViewedCards()
         currentIndex = 0
@@ -123,3 +130,4 @@ struct FlashCardsView: View {
         showingCompletionView = false
     }
 }
+
