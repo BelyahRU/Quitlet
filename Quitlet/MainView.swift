@@ -1,9 +1,4 @@
-//
-//  ContentView.swift
-//  Quitlet
-//
-//  Created by Александр Андреев on 26.08.2024.
-//
+
 
 import SwiftUI
 

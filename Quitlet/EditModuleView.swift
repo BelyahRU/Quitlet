@@ -1,9 +1,4 @@
-//
-//  EditModuleView.swift
-//  Quitlet
-//
-//  Created by Александр Андреев on 29.08.2024.
-//
+
 
 import Foundation
 import SwiftUI
