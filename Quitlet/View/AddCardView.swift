@@ -1,41 +1,49 @@
-//
-//  AddCardView.swift
-//  Quitlet
-//
-//  Created by Александр Андреев on 26.08.2024.
-//
-
-import Foundation
-import SwiftUI
 import SwiftUI
 
 struct AddCardView: View {
     @Binding var module: FlashCardModule
-    @State private var question: String = ""
-    @State private var answer: String = ""
+    @Environment(\.presentationMode) var presentationMode
+    @State private var term: String = ""
+    @State private var definition: String = ""
+    var onCardAdded: () -> Void // Замыкание для обновления localFlashCards
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Add New Card")) {
-                    TextField("Question", text: $question)
-                    TextField("Answer", text: $answer)
+            VStack {
+                TextField("Enter Term", text: $term)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                TextField("Enter Definition", text: $definition)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                Button(action: {
+                    addNewCard()
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Add Card")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
-                Button("Save") {
-                    if !question.isEmpty && !answer.isEmpty {
-                        let newCard = FlashCard(question: question, answer: answer)
-                        module.flashCards.append(newCard)
-                        question = ""
-                        answer = ""
-                    }
-                }
+                .padding()
+
+                Spacer()
             }
-            .navigationTitle("Add Card")
-            .navigationBarItems(trailing: Button("Done") {
-                // This will close the sheet
+            .navigationTitle("Add New Card")
+            .navigationBarItems(leading: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()
             })
         }
     }
+
+    private func addNewCard() {
+        let newCard = FlashCard(question: term, answer: definition)
+        module.flashCards.append(newCard)
+        onCardAdded() // Вызываем замыкание после добавления новой карточки
+    }
 }
-
-

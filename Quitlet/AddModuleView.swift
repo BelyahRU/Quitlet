@@ -1,11 +1,3 @@
-//
-//  AddModuleView.swift
-//  Quitlet
-//
-//  Created by Александр Андреев on 29.08.2024.
-//
-
-import Foundation
 import SwiftUI
 
 struct AddModuleView: View {
@@ -13,8 +5,8 @@ struct AddModuleView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var moduleName: String = ""
-    @State private var word: String = ""
-    @State private var translation: String = ""
+    @State private var question: String = ""
+    @State private var answer: String = ""
     
     var body: some View {
         NavigationView {
@@ -24,26 +16,26 @@ struct AddModuleView: View {
                 }
                 
                 Section(header: Text("New Card")) {
-                    TextField("Word", text: $word)
-                    TextField("Translation", text: $translation)
+                    TextField("Question", text: $question)
+                    TextField("Answer", text: $answer)
                 }
                 
                 Button(action: addModule) {
                     Text("Add Module")
                 }
-                .disabled(moduleName.isEmpty || word.isEmpty || translation.isEmpty)
+                .disabled(moduleName.isEmpty || question.isEmpty || answer.isEmpty)
             }
             .navigationBarTitle("Add Module")
-            .navigationBarItems(trailing: Button("Done") {
-                addModule()
+            .navigationBarItems(trailing: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             })
         }
     }
     
-    func addModule() {
-        let newCard = FlashCard(question: word, answer: translation)
+    private func addModule() {
+        let newCard = FlashCard(question: question, answer: answer)
         let newModule = FlashCardModule(name: moduleName, flashCards: [newCard])
         modules.append(newModule)
+        presentationMode.wrappedValue.dismiss() // Закрываем экран и возвращаемся на главный экран
     }
 }
