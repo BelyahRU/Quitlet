@@ -1,5 +1,6 @@
 import SwiftUI
 
+
 struct EditModuleView: View {
     @Binding var module: FlashCardModule
     @Environment(\.presentationMode) var presentationMode // Добавьте Environment для управления модальным окном
